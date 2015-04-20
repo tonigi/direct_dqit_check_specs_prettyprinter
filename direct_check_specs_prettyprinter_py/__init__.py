@@ -1,0 +1,1 @@
+# Unpythonically, all of the code is in the supplied script.

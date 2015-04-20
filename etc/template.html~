@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"> 
+    <title> {{ SPEC_FILE_NAME }} </title>
+    <style type="text/css">
+      body {background-color:white}
+      .in  {padding-left: 1.5em}
+      .ruleid {font-weight: bold}
+      div.rule {margin-bottom: 1em;
+		padding: 0.5em;
+		border: solid lightgrey 2px;
+		background-color: whitesmoke;}
+      p.ruleheader {background-color: whitesmoke}
+      .field {color: blue;     font-weight: bold;}
+      .table {color: blue;     font-weight: bold;}
+      .msg   {color: blue;     font-style: italic}
+      .msg:before { content: '\201C'; }
+      .msg:after  { content: '\201D'; }
+    </style>
+    <link href="prismjs/prism.css" rel="stylesheet" />
+  </head>
+  <body>
+    <script src="prismjs/prism.js"></script>
+
+    <h1>Checking specification {{ SPEC_FILE_NAME }} </h1>
+
+    <p>The specification inolves the following DB tables:
+      <ul>
+	{% for table in LIST_OF_TABLES %}
+	   <li>   <code class="language-matlab"> {{ table }} </code>
+	{% endfor %}
+    </ul>
+
+      <h2>Checks in place for simple fields</h2>
+
+      {% for rule in specs %}
+        {% if rule.Xcheck %}
+ 	  <div class="rule">
+            <p class="ruleheader"> Rule id <span class="ruleid"> {{ rule.SpecID }} /
+		{{ rule.CheckID }} </span>
+
+	    <div class="in">
+	      <p> Check field <span class=field> {{rule.Field}} </span> in table
+		<span class=table> {{rule.Database_table}} </span>
+	      <p>
+		<div class="in">
+		  If <code class="language-matlab"> {{rule.Field}} </code>
+		  is missing: <span class="msg"> {{rule.Missing}} </span>
+
+		  {% if rule.Error_condition_s %}
+		    <p>
+		      If <code class="language-matlab"> {% rule.Error_condition_s %} </code> then
+		      <br> <div class="in"> error 
+			<span class="msg"><TMPL_VAR NAME=Error_message></span>
+		      </div>
+		  </TMPL_IF>
+
+		  <TMPL_IF NAME="Warning_condition_s">
+		    <p>
+		      If <code  class="language-matlab"> <TMPL_VAR NAME=Warning_condition_s> </code> then
+		      <br> <div class="in"> warning
+			<span class="msg"><TMPL_VAR NAME=Warning_message></span>
+		      </div>
+		  </TMPL_IF>
+
+		</div>
+	    </div>
+    	   </div>
+
+	</TMPL_UNLESS>
+      </TMPL_LOOP>
+
+
+      <h2>Checks comparing multiple tables</h2>
+
+
+      <TMPL_LOOP NAME=SPECS>
+	<TMPL_IF NAME="Xcheck">
+ 	  <div class="rule">
+          <p class="ruleheader"> Rule id <span class="ruleid"><TMPL_VAR NAME=SpecID>/<TMPL_VAR NAME=CheckID></span>
+
+	    <div class="in">
+	    <TMPL_IF NAME="Error_condition_s">
+	      <p>
+		If <code  class="language-matlab"> <TMPL_VAR NAME=Error_condition_s> </code> then
+		<br> <div class="in"> error 
+		  <span class="msg"><TMPL_VAR NAME=Error_message></span>
+		</div>
+	    </TMPL_IF>
+
+	    <TMPL_IF NAME="Warning_condition_s">
+	      <p>
+		If <code  class="language-matlab"> <TMPL_VAR NAME=Warning_condition_s> </code> then
+		<br> <div class="in"> warning
+		  <span class="msg"><TMPL_VAR NAME=Warning_message></span>
+		</div>
+	    </TMPL_IF>
+	    </div>
+	  </div>
+	</TMPL_IF>
+      </TMPL_LOOP>
+
+
+  <p>&#x25a1;
+  </body>
+</html>
